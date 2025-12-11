@@ -3,624 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samplette Redesign</title>
-    
-    <!-- Tailwind CSS -->
+    <title>SAMPLETTE :: DUSTY EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        
-        /* Animaciones personalizadas */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .vinyl-spin {
-            animation: spin 6s linear infinite;
-        }
-        
-        .paused-vinyl {
-            animation-play-state: paused;
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Rubik+Glitch&family=Special+Elite&display=swap');
+
+        :root {
+            --rust: #a65e2e;
+            --dust: #d4c5a9;
+            --dark-dust: #1a1918;
+            --vinyl-black: #0d0d0d;
+            --screen-glow: rgba(50, 205, 50, 0.1);
+            --crt-line: rgba(0, 0, 0, 0.2);
         }
 
-        .animate-spin-slow {
-            animation: spin 10s linear infinite;
-        }
-        
-        /* Ocultar barra de desplazamiento */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        body {
+            background-color: var(--dark-dust);
+            color: var(--dust);
+            font-family: 'Courier Prime', monospace;
+            overflow: hidden;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        /* Estilos para rango */
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            margin-top: -4px;
-        }
-        
-        input[type=range]::-webkit-slider-runnable-track {
+        /* Efecto CRT / Suciedad de Pantalla */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #27272a;
-            border-radius: 2px;
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 999;
+            opacity: 0.6;
+        }
+
+        /* Estilo de "Etiqueta Vieja" */
+        .paper-texture {
+            background-color: #e3dace;
+            color: #1a1a1a;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/svg%3E");
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.1);
+            transform: rotate(-0.5deg);
+        }
+
+        .mpc-pad {
+            background-color: #4a4a4a;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1), inset -2px -2px 5px rgba(0,0,0,0.5), 5px 5px 10px rgba(0,0,0,0.5);
+            transition: all 0.1s;
+            border: 1px solid #222;
+        }
+        .mpc-pad:active {
+            transform: scale(0.95);
+            box-shadow: inset 2px 2px 10px rgba(0,0,0,0.8);
+            background-color: #3d3d3d;
+        }
+        .mpc-pad.active-pad {
+            background-color: var(--rust);
+            box-shadow: 0 0 15px var(--rust);
+        }
+
+        /* Scrollbar sucia */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1918; border-left: 1px solid #333; }
+        ::-webkit-scrollbar-thumb { background: #555; border: 1px solid #000; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--rust); }
+
+        .glitch-text {
+            font-family: 'Rubik Glitch', cursive;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        .typewriter {
+            font-family: 'Special Elite', cursive;
+        }
+
+        .dirty-border {
+            border: 2px solid #333;
+            border-image: linear-gradient(to bottom right, #555 0%, #111 100%);
+            border-image-slice: 1;
         }
     </style>
 </head>
-<body class="bg-zinc-950 text-white overflow-hidden h-screen flex select-none selection:bg-indigo-500/30">
+<body class="flex h-screen w-screen">
 
-    <!-- SIDEBAR -->
-    <aside class="w-20 hidden md:flex flex-col items-center py-8 border-r border-zinc-800 bg-zinc-900/50 backdrop-blur-md z-30">
-        <div class="mb-10 text-indigo-400">
-            <i data-lucide="disc" class="w-8 h-8 animate-spin-slow"></i>
-        </div>
-        
-        <nav class="flex-1 flex flex-col space-y-8 w-full items-center">
-            <button class="p-3 rounded-xl bg-zinc-800 text-white shadow-lg shadow-indigo-500/10 hover:bg-indigo-600 transition-all duration-300 group relative">
-                <i data-lucide="music" class="w-5 h-5"></i>
-                <span class="absolute left-14 bg-zinc-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700 pointer-events-none z-50">Descubrir</span>
-            </button>
-            <button class="p-3 rounded-xl text-zinc-500 hover:bg-zinc-800 hover:text-white transition-all group relative">
-                <i data-lucide="heart" class="w-5 h-5"></i>
-                <span class="absolute left-14 bg-zinc-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700 pointer-events-none z-50">Favoritos</span>
-            </button>
-            <button class="p-3 rounded-xl text-zinc-500 hover:bg-zinc-800 hover:text-white transition-all group relative">
-                <i data-lucide="clock" class="w-5 h-5"></i>
-                <span class="absolute left-14 bg-zinc-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700 pointer-events-none z-50">Historial</span>
-            </button>
-        </nav>
+    <div class="crt-overlay"></div>
 
-        <div class="flex flex-col space-y-6">
-            <button class="p-3 rounded-xl text-zinc-500 hover:bg-zinc-800 hover:text-white transition-all">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-            </button>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold border-2 border-zinc-900">
-                F
-            </div>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex flex-col relative overflow-hidden">
-        
-        <!-- Background Gradients (Dynamic) -->
-        <div id="bg-gradient" class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 transition-colors duration-1000 blur-3xl pointer-events-none"></div>
-        <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse pointer-events-none"></div>
-
-        <!-- Header -->
-        <header class="flex justify-between items-center p-6 z-20">
-            <div class="md:hidden flex items-center space-x-3">
-                <i data-lucide="disc" class="text-indigo-500 w-7 h-7"></i>
-                <span class="font-bold text-lg tracking-tight">Samplette</span>
-            </div>
-            
-            <div class="hidden md:flex items-center space-x-2 bg-zinc-900/80 border border-zinc-800 rounded-full px-4 py-2 w-96 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all">
-                <i data-lucide="search" class="w-4 h-4 text-zinc-500"></i>
-                <input type="text" placeholder="Buscar artistas, etiquetas o regiones..." class="bg-transparent border-none outline-none text-sm text-zinc-300 w-full placeholder-zinc-600 focus:ring-0">
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <button id="btn-filters" class="flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-all bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 border border-zinc-700">
-                    <i data-lucide="sliders" class="w-4 h-4"></i>
-                    <span>Filtros</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- Content Body -->
-        <div class="flex-1 flex flex-col items-center justify-center relative z-10 px-4">
-            
-            <!-- MAIN VISUALIZER CONTAINER -->
-            <div class="relative group mb-8 scale-90 md:scale-100">
-                
-                <!-- YOUTUBE PLAYER WRAPPER -->
-                <div id="video-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out z-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-zinc-800 w-0 h-0 opacity-0 pointer-events-none">
-                    <iframe id="youtube-iframe" width="100%" height="100%" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" class="w-full h-full bg-black"></iframe>
-                </div>
-
-                <!-- VINYL WRAPPER -->
-                <div id="vinyl-container" class="relative transition-all duration-500 opacity-100 scale-100 blur-0">
-                    <!-- Glow effect -->
-                    <div id="vinyl-glow" class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-                    
-                    <!-- Vinyl Record -->
-                    <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-full bg-zinc-950 border-8 border-zinc-900 shadow-2xl flex items-center justify-center overflow-hidden">
-                        <div class="absolute inset-0 rounded-full border-4 border-zinc-800 opacity-20"></div>
-                        <div class="absolute inset-4 rounded-full border border-zinc-800 opacity-20"></div>
-                        <div class="absolute inset-8 rounded-full border border-zinc-800 opacity-20"></div>
-                        
-                        <!-- Spinning Art -->
-                        <div id="vinyl-art-container" class="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 border-zinc-800 shadow-inner relative transition-transform duration-[4000ms] ease-linear transform scale-95">
-                            <img id="track-cover" src="" alt="Cover" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent"></div>
-                        </div>
-                        
-                        <div class="absolute w-4 h-4 bg-zinc-200 rounded-full shadow-lg z-20"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW TOGGLE CONTROLS -->
-            <div class="flex gap-4 mb-8">
-                <button id="btn-mode-vinyl" class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white text-black shadow-lg shadow-white/10">
-                    <i data-lucide="disc" class="w-4 h-4"></i> Vinilo
-                </button>
-                <button id="btn-mode-video" class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-zinc-800 text-zinc-500 hover:text-white">
-                    <i data-lucide="monitor" class="w-4 h-4"></i> Video
-                </button>
-                <a id="link-youtube" href="#" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white border border-red-600/20 transition-all">
-                    <i data-lucide="youtube" class="w-4 h-4"></i> Abrir
-                </a>
-            </div>
-
-            <!-- METADATA -->
-            <div class="text-center space-y-2 mb-6 max-w-2xl">
-                <h1 id="track-title" class="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 tracking-tight leading-tight">
-                    One More Chance
-                </h1>
-                <p id="track-artist" class="text-lg md:text-xl text-indigo-400 font-medium tracking-wide">
-                    Fiesta
-                </p>
-            </div>
-
-            <!-- INFO CHIPS -->
-            <div class="flex flex-wrap justify-center gap-3 mb-10" id="chips-container">
-                <!-- Chips injected via JS -->
-            </div>
-
-            <!-- PLAYER CONTROLS -->
-            <div class="w-full max-w-2xl bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 shadow-2xl relative z-30">
-                <div class="flex items-center justify-between">
-                    
-                    <!-- Volume -->
-                    <div class="flex items-center space-x-2 w-1/4 group">
-                        <i data-lucide="volume-2" class="w-5 h-5 text-zinc-500 group-hover:text-zinc-300"></i>
-                        <input id="volume-slider" type="range" min="0" max="100" value="80" class="w-20 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer">
-                    </div>
-
-                    <!-- Main Buttons -->
-                    <div class="flex items-center space-x-6">
-                        <button id="btn-favorite" class="p-2 rounded-full transition-all text-zinc-500 hover:text-white">
-                            <i data-lucide="heart" class="w-5 h-5"></i>
-                        </button>
-                        
-                        <button id="btn-play-pause" class="w-14 h-14 bg-white text-zinc-900 rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-white/10">
-                            <i data-lucide="play" class="w-6 h-6 ml-1" id="icon-play"></i>
-                            <i data-lucide="pause" class="w-6 h-6 hidden" id="icon-pause"></i>
-                        </button>
-                        
-                        <button id="btn-shuffle" class="p-3 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-colors group relative">
-                            <i data-lucide="shuffle" class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500"></i>
-                            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-zinc-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                Aleatorio
-                            </span>
-                        </button>
-                    </div>
-
-                    <!-- Extras -->
-                    <div class="flex justify-end w-1/4">
-                        <button class="text-zinc-500 hover:text-white transition-colors">
-                            <i data-lucide="share-2" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+    <!-- SIDEBAR: CRATE & FILTERS -->
+    <div class="w-80 bg-[#161514] border-r-2 border-[#2a2826] flex flex-col z-10 shadow-2xl relative">
+        <!-- Logo -->
+        <div class="p-6 border-b-2 border-dashed border-[#333] bg-[#111]">
+            <h1 class="text-3xl glitch-text text-[#e3dace] tracking-widest">SMPL::TE</h1>
+            <p class="text-[10px] text-[#666] mt-1 font-mono">CRATE DIGGING SIMULATOR V3.0</p>
         </div>
 
-        <!-- COLLAPSIBLE FILTERS -->
-        <div id="filter-panel" class="absolute bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-6 z-40 transition-transform duration-300 ease-in-out translate-y-full">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i data-lucide="sliders" class="w-5 h-5 text-indigo-500"></i>
-                        Configuración de Descubrimiento
-                    </h3>
-                    <button id="btn-close-filters" class="text-zinc-500 hover:text-white">Cerrar</button>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <!-- Filters Control Panel -->
+            <div class="mb-8 p-3 bg-[#1e1d1c] border border-[#333] shadow-inner">
+                <div class="flex items-center gap-2 mb-3 text-[#a65e2e] border-b border-[#333] pb-1">
+                    <i class="fas fa-sliders-h"></i>
+                    <span class="font-bold text-sm tracking-widest">FILTER_PARAMS</span>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Year -->
-                    <div class="space-y-3">
-                        <label class="text-xs font-bold text-zinc-500 uppercase tracking-wider flex justify-between">
-                            <span>Rango de Años</span>
-                            <span class="text-indigo-400" id="year-label">1960 - 2024</span>
-                        </label>
-                        <div class="flex gap-4 items-center">
-                            <input type="range" min="1950" max="2024" value="1960" id="year-start" class="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer">
-                            <input type="range" min="1950" max="2024" value="2024" id="year-end" class="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer">
-                        </div>
-                    </div>
-                    
-                    <!-- Genre Buttons would go here dynamically or static -->
-                     <div class="space-y-3">
-                        <label class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Género</label>
-                        <select id="genre-select" class="w-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm rounded-lg p-2.5 outline-none">
-                            <option value="Todos">Todos</option>
-                            <option value="Funk">Funk</option>
-                            <option value="Jazz">Jazz</option>
-                            <option value="City Pop">City Pop</option>
-                            <option value="Soul">Soul</option>
-                            <option value="House">House</option>
+                <div class="space-y-4 font-mono text-xs">
+                    <div>
+                        <label class="block text-[#666] mb-1">GENRE_SELECT</label>
+                        <select id="genreFilter" class="w-full bg-[#111] text-[#999] border border-[#333] p-2 outline-none focus:border-[#a65e2e]">
+                            <option value="All">ALL CRATES</option>
+                            <option value="Jazz">JAZZ / FUSION</option>
+                            <option value="Soul">SOUL / FUNK</option>
+                            <option value="City Pop">CITY POP (JP)</option>
+                            <option value="Soundtrack">LIBRARY / OST</option>
+                            <option value="Hip Hop">HIP HOP / BEATS</option>
                         </select>
                     </div>
 
-                    <!-- Region -->
-                    <div class="space-y-3">
-                        <label class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Región</label>
-                        <select class="w-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm rounded-lg p-2.5 outline-none">
-                            <option>Cualquier Región</option>
-                            <option>Japón</option>
-                            <option>Brasil</option>
-                            <option>USA</option>
-                            <option>Europa</option>
-                        </select>
+                    <div>
+                        <label class="block text-[#666] mb-1">YEAR_RANGE</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="minYear" value="1960" class="w-1/2 bg-[#111] text-[#999] border border-[#333] p-2 text-center">
+                            <input type="number" id="maxYear" value="2005" class="w-1/2 bg-[#111] text-[#999] border border-[#333] p-2 text-center">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[#666] mb-1">OBSCURITY (VIEWS)</label>
+                        <input type="range" id="viewsFilter" min="1" max="100" value="50" class="w-full h-2 bg-[#111] appearance-none cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-[#444] mt-1">
+                            <span>UNDERGROUND</span>
+                            <span>MAINSTREAM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Log -->
+            <div>
+                <div class="flex items-center gap-2 mb-3 text-[#666] border-b border-[#333] pb-1">
+                    <i class="fas fa-history"></i>
+                    <span class="font-bold text-sm tracking-widest">DIG_HISTORY</span>
+                </div>
+                <ul id="historyList" class="space-y-2 text-xs font-mono opacity-80">
+                    <!-- JS will populate this -->
+                    <li class="p-2 border border-dashed border-[#333] text-[#444] text-center italic">Crate is empty...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PLAYER -->
+    <div class="flex-1 flex flex-col relative bg-[#0f0e0d]">
+        <!-- Dirt textures -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/dust.png');"></div>
+
+        <!-- Player Screen -->
+        <div class="flex-1 flex items-center justify-center p-10 relative z-10">
+            <!-- The "Monitor" Wrapper -->
+            <div class="w-full max-w-4xl bg-[#000] p-4 rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.8)] border-4 border-[#222] relative">
+                <!-- Screen Glare -->
+                <div class="absolute inset-0 bg-gradient-to-br from-white to-transparent opacity-5 pointer-events-none z-20"></div>
+                
+                <!-- Youtube Iframe -->
+                <div class="aspect-video w-full bg-[#111] overflow-hidden relative border border-[#333]">
+                    <div id="playerLoading" class="absolute inset-0 flex items-center justify-center text-[#333] font-mono z-0">
+                        INITIALIZING SYSTEM...
+                    </div>
+                    <div id="playerContainer" class="relative z-10 w-full h-full">
+                        <!-- Iframe injected by JS -->
                     </div>
                 </div>
 
-                <div class="mt-8 flex justify-end">
-                    <button id="btn-apply-filters" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-zinc-200 transition-colors shadow-lg shadow-white/10">
-                        Aplicar y Buscar
+                <!-- Control Deck -->
+                <div class="mt-6 flex items-center justify-between bg-[#1a1918] p-4 border-t-2 border-[#333]">
+                    
+                    <div class="flex gap-4">
+                         <!-- MPC Pads (Fake controls) -->
+                        <div class="w-12 h-12 mpc-pad rounded flex items-center justify-center cursor-pointer hover:bg-[#555]" onclick="togglePlay()">
+                             <i class="fas fa-play text-gray-400 text-xs"></i>
+                        </div>
+                        <div class="w-12 h-12 mpc-pad rounded flex items-center justify-center cursor-pointer hover:bg-[#555]" onclick="toggleFavorite()">
+                             <i id="favIcon" class="fas fa-heart text-gray-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- THE BIG SHUFFLE BUTTON -->
+                    <button onclick="shuffleTrack()" class="group relative outline-none">
+                        <div class="w-24 h-24 bg-[#a65e2e] rounded-full shadow-[0_5px_0_#633619] active:shadow-none active:translate-y-[5px] transition-all flex items-center justify-center border-4 border-[#824822]">
+                            <i class="fas fa-random text-[#e3dace] text-3xl group-hover:rotate-180 transition-transform duration-500"></i>
+                        </div>
+                        <div class="text-center mt-3 text-[10px] text-[#555] font-mono tracking-widest">PRESS SPACE</div>
                     </button>
+
+                    <div class="flex gap-4">
+                        <div class="text-right">
+                            <div class="text-[10px] text-[#444] font-bold">MASTER VOL</div>
+                            <div class="flex gap-1 mt-1">
+                                <div class="w-2 h-6 bg-red-900"></div>
+                                <div class="w-2 h-6 bg-yellow-900"></div>
+                                <div class="w-2 h-6 bg-green-900"></div>
+                                <div class="w-2 h-6 bg-green-600 animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </main>
+    <!-- SIDEBAR: METADATA CARD -->
+    <div class="w-96 bg-[#131211] border-l-2 border-[#2a2826] relative z-10 flex flex-col p-6 shadow-2xl">
+        <h2 class="text-center text-[#444] font-bold tracking-[0.3em] mb-6 text-xs border-b border-[#222] pb-2">METADATA_CARD_808</h2>
+        
+        <!-- The "Sticker" Card -->
+        <div class="paper-texture p-6 shadow-xl transform rotate-1 relative h-full flex flex-col">
+            <!-- Stain overlay -->
+            <div class="absolute top-10 right-10 w-20 h-20 bg-[#6b5038] rounded-full opacity-10 blur-xl pointer-events-none"></div>
 
-    <!-- LOGIC -->
+            <div class="border-4 border-double border-[#999] p-4 flex-1 flex flex-col justify-between">
+                
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-black text-white px-2 py-1 text-[10px] font-bold">IMPORT</span>
+                        <span class="text-[#a65e2e] font-bold text-xl typewriter opacity-50">#<span id="metaId">000</span></span>
+                    </div>
+
+                    <h1 id="metaTitle" class="text-2xl font-bold leading-none mb-2 text-black typewriter uppercase">UNKNOWN</h1>
+                    <p id="metaArtist" class="text-md text-[#555] font-mono mb-6 italic border-b border-gray-400 pb-2">Artist Name</p>
+
+                    <div class="grid grid-cols-2 gap-4 text-xs font-mono text-[#333]">
+                        <div>
+                            <span class="block text-[#888] text-[9px] uppercase">Album</span>
+                            <span id="metaAlbum" class="font-bold">---</span>
+                        </div>
+                        <div>
+                            <span class="block text-[#888] text-[9px] uppercase">Year</span>
+                            <span id="metaYear" class="font-bold">19--</span>
+                        </div>
+                        <div>
+                            <span class="block text-[#888] text-[9px] uppercase">BPM (Est.)</span>
+                            <span id="metaBpm" class="bg-black text-white px-1">---</span>
+                        </div>
+                        <div>
+                            <span class="block text-[#888] text-[9px] uppercase">Key</span>
+                            <span id="metaKey">---</span>
+                        </div>
+                        <div class="col-span-2">
+                            <span class="block text-[#888] text-[9px] uppercase">Style / Genre</span>
+                            <span id="metaGenre" class="font-bold text-[#a65e2e]">---</span>
+                        </div>
+                         <div class="col-span-2 mt-2">
+                            <span class="block text-[#888] text-[9px] uppercase">Origin</span>
+                            <span id="metaCountry" class="border border-black px-1 uppercase">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-400">
+                    <div class="flex items-center gap-2">
+                         <i class="fas fa-barcode text-3xl"></i>
+                         <div class="flex flex-col text-[8px] leading-tight">
+                             <span>DO NOT RESELL</span>
+                             <span>PROMOTIONAL USE</span>
+                         </div>
+                    </div>
+                    <div class="mt-2 text-[10px] text-center font-bold text-red-800 uppercase border border-red-800 p-1 transform -rotate-2 inline-block">
+                        CLEARED SAMPLE? NO
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- DATA ---
-        const TRACK_DATABASE = [
-            {
-                id: 1,
-                artist: "Fiesta",
-                title: "One More Chance",
-                year: 1979,
-                genre: "Disco / Funk",
-                country: "USA",
-                label: "Arista",
-                bpm: 118,
-                key: "Dm",
-                youtubeId: "zZQ7RBlmhAk",
-                cover: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1000&auto=format&fit=crop",
-                color: "from-purple-500 to-pink-500"
-            },
-            {
-                id: 2,
-                artist: "Tatsuro Yamashita",
-                title: "Sparkle",
-                year: 1982,
-                genre: "City Pop",
-                country: "Japan",
-                label: "RCA",
-                bpm: 124,
-                key: "A",
-                youtubeId: "7ijMDQwrWpU", 
-                cover: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=1000&auto=format&fit=crop",
-                color: "from-blue-400 to-cyan-300"
-            },
-            {
-                id: 3,
-                artist: "Marcos Valle",
-                title: "Estrelar",
-                year: 1983,
-                genre: "Boogie / MPB",
-                country: "Brazil",
-                label: "Som Livre",
-                bpm: 112,
-                key: "G",
-                youtubeId: "cTPaDbt_USA",
-                cover: "https://images.unsplash.com/photo-1514525253440-b393452e8d26?q=80&w=1000&auto=format&fit=crop",
-                color: "from-yellow-400 to-orange-500"
-            },
-            {
-                id: 4,
-                artist: "Piero Piccioni",
-                title: "Camille 2000",
-                year: 1969,
-                genre: "Soundtrack / Jazz",
-                country: "Italy",
-                label: "Easy Tempo",
-                bpm: 94,
-                key: "Cm",
-                youtubeId: "kMXTn_WEYsE",
-                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop",
-                color: "from-red-500 to-rose-900"
-            },
-            {
-                id: 5,
-                artist: "Casiopea",
-                title: "Midnight Rendezvous",
-                year: 1979,
-                genre: "Jazz Fusion",
-                country: "Japan",
-                label: "Alfa",
-                bpm: 130,
-                key: "Em",
-                youtubeId: "vJ3xTij8nQA",
-                cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1000&auto=format&fit=crop",
-                color: "from-indigo-600 to-blue-800"
-            }
+        // --- BASE DE DATOS (Mismos datos, formato JSON) ---
+        const SAMPLE_DB = [
+            { id: "gQ99Om3lRfw", artist: "Masayoshi Takanaka", title: "Ready to Fly", album: "Takanaka", year: 1977, genre: "City Pop", style: "Fusion / Funk", bpm: 108, key: "E Maj", country: "Japan", views: 450000 },
+            { id: "J3_IT622Sbc", artist: "Casiopea", title: "Midnight Rendezvous", album: "Casiopea", year: 1979, genre: "Jazz", style: "Jazz Fusion", bpm: 124, key: "A Min", country: "Japan", views: 89000 },
+            { id: "Z7G-DthvFpw", artist: "Azymuth", title: "Voo Sobre O Horizonte", album: "Águia Não Come Mosca", year: 1977, genre: "Jazz", style: "Jazz-Funk", bpm: 96, key: "G Min", country: "Brazil", views: 120000 },
+            { id: "LdJ-C8yKzT8", artist: "Piero Umiliani", title: "Crepuscolo Sul Mare", album: "La Ragazza Fuoristrada", year: 1973, genre: "Soundtrack", style: "Library / Lounge", bpm: 78, key: "C Maj", country: "Italy", views: 25000 },
+            { id: "8j_TDoOPnIA", artist: "Cortex", title: "Troupeau Bleu", album: "Troupeau Bleu", year: 1975, genre: "Jazz", style: "Jazz-Funk", bpm: 92, key: "F Min", country: "France", views: 67000 },
+            { id: "0kK3ZJ3W8kU", artist: "Ryo Fukui", title: "Early Summer", album: "Scenery", year: 1976, genre: "Jazz", style: "Hard Bop", bpm: 160, key: "D Min", country: "Japan", views: 1500000 },
+            { id: "XbM2-j5y5yY", artist: "Tatsuro Yamashita", title: "Sparkle", album: "For You", year: 1982, genre: "City Pop", style: "Funk / Soul", bpm: 118, key: "G Maj", country: "Japan", views: 980000 },
+            { id: "Jd1W-7-e3-E", artist: "Madvillain", title: "Accordion", album: "Madvillainy", year: 2004, genre: "Hip Hop", style: "Abstract", bpm: 96, key: "A Min", country: "USA", views: 2000000 },
+            { id: "H2W4wglPW2c", artist: "Shigeo Sekito", title: "The Word II", album: "Special Sound Series", year: 1975, genre: "Easy Listening", style: "Electone / Library", bpm: 72, key: "C# Min", country: "Japan", views: 30000 },
+            { id: "x-2i-l4-w-s", artist: "Roy Ayers", title: "Everybody Loves The Sunshine", album: "Sunshine", year: 1976, genre: "Soul", style: "Neo Soul Base", bpm: 88, key: "C Maj", country: "USA", views: 5000000 },
+            { id: "k-2d-s-9-a", artist: "Hiroshi Suzuki", title: "Romance", album: "Cat", year: 1975, genre: "Jazz", style: "Post-Bop", bpm: 82, key: "Bb Min", country: "Japan", views: 400000 }
         ];
 
-        // --- STATE ---
-        let currentTrack = TRACK_DATABASE[0];
-        let isPlaying = false;
-        let showVideo = false;
-        let isFavorite = false;
-        let volume = 80;
-        let filtersOpen = false;
+        let currentTrack = null;
+        let history = [];
+        let favorites = [];
 
-        // --- DOM ELEMENTS ---
-        const iframe = document.getElementById('youtube-iframe');
-        const playBtn = document.getElementById('btn-play-pause');
-        const iconPlay = document.getElementById('icon-play');
-        const iconPause = document.getElementById('icon-pause');
-        const shuffleBtn = document.getElementById('btn-shuffle');
-        const favBtn = document.getElementById('btn-favorite');
-        const volumeSlider = document.getElementById('volume-slider');
+        // DOM Elements
+        const playerContainer = document.getElementById('playerContainer');
+        const historyList = document.getElementById('historyList');
         
-        const modeVinylBtn = document.getElementById('btn-mode-vinyl');
-        const modeVideoBtn = document.getElementById('btn-mode-video');
-        const videoContainer = document.getElementById('video-container');
-        const vinylContainer = document.getElementById('vinyl-container');
-        const vinylArt = document.getElementById('vinyl-art-container');
-        const vinylGlow = document.getElementById('vinyl-glow');
+        // Metadata Elements
+        const metaTitle = document.getElementById('metaTitle');
+        const metaArtist = document.getElementById('metaArtist');
+        const metaAlbum = document.getElementById('metaAlbum');
+        const metaYear = document.getElementById('metaYear');
+        const metaBpm = document.getElementById('metaBpm');
+        const metaKey = document.getElementById('metaKey');
+        const metaGenre = document.getElementById('metaGenre');
+        const metaCountry = document.getElementById('metaCountry');
+        const metaId = document.getElementById('metaId');
 
-        const trackTitle = document.getElementById('track-title');
-        const trackArtist = document.getElementById('track-artist');
-        const trackCover = document.getElementById('track-cover');
-        const bgGradient = document.getElementById('bg-gradient');
-        const chipsContainer = document.getElementById('chips-container');
-        const linkYoutube = document.getElementById('link-youtube');
+        // Filters
+        const genreFilter = document.getElementById('genreFilter');
+        const minYear = document.getElementById('minYear');
+        const maxYear = document.getElementById('maxYear');
 
-        const filtersBtn = document.getElementById('btn-filters');
-        const closeFiltersBtn = document.getElementById('btn-close-filters');
-        const applyFiltersBtn = document.getElementById('btn-apply-filters');
-        const filterPanel = document.getElementById('filter-panel');
-        const yearStart = document.getElementById('year-start');
-        const yearEnd = document.getElementById('year-end');
-        const yearLabel = document.getElementById('year-label');
-        const genreSelect = document.getElementById('genre-select');
-
-        // --- FUNCTIONS ---
-
-        function renderTrack() {
-            // Update Text
-            trackTitle.innerText = currentTrack.title;
-            trackArtist.innerText = currentTrack.artist;
-            trackCover.src = currentTrack.cover;
+        function init() {
+            shuffleTrack();
             
-            // Update YouTube Link
-            linkYoutube.href = `https://www.youtube.com/watch?v=${currentTrack.youtubeId}`;
-
-            // Update Colors
-            // Reset classes
-            bgGradient.className = `absolute top-0 left-0 w-full h-full bg-gradient-to-br ${currentTrack.color} opacity-20 transition-colors duration-1000 blur-3xl pointer-events-none`;
-            vinylGlow.className = `absolute inset-0 rounded-full bg-gradient-to-r ${currentTrack.color} blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-700`;
-
-            // Update Chips
-            chipsContainer.innerHTML = '';
-            const chips = [
-                { icon: 'clock', label: 'Año', value: currentTrack.year },
-                { icon: 'globe', label: 'País', value: currentTrack.country },
-                { icon: 'layers', label: 'Género', value: currentTrack.genre },
-                { icon: 'volume-2', label: 'BPM', value: currentTrack.bpm },
-                { icon: 'music', label: 'Clave', value: currentTrack.key }
-            ];
-
-            chips.forEach(chip => {
-                const el = document.createElement('div');
-                el.className = "flex items-center space-x-2 bg-zinc-800/50 px-3 py-1.5 rounded-full border border-zinc-700/50 backdrop-blur-sm";
-                el.innerHTML = `
-                    <i data-lucide="${chip.icon}" class="w-3.5 h-3.5 text-zinc-400"></i>
-                    <span class="text-xs text-zinc-500 font-medium uppercase tracking-wider">${chip.label}</span>
-                    <span class="text-xs text-zinc-200 font-semibold">${chip.value}</span>
-                `;
-                chipsContainer.appendChild(el);
+            // Spacebar listener
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    shuffleTrack();
+                }
             });
-            
-            // Re-render icons for new elements
-            lucide.createIcons();
+        }
 
-            // Load YouTube Video
-            loadVideo(currentTrack.youtubeId);
+        function shuffleTrack() {
+            // Apply Filters
+            const selectedGenre = genreFilter.value;
+            const minY = parseInt(minYear.value);
+            const maxY = parseInt(maxYear.value);
+
+            const candidates = SAMPLE_DB.filter(track => {
+                const matchGenre = selectedGenre === 'All' || track.genre === selectedGenre;
+                const matchYear = track.year >= minY && track.year <= maxY;
+                return matchGenre && matchYear;
+            });
+
+            const pool = candidates.length > 0 ? candidates : SAMPLE_DB;
             
-            // Reset Fav
-            isFavorite = false;
+            // Pick Random
+            let nextTrack;
+            do {
+                const r = Math.floor(Math.random() * pool.length);
+                nextTrack = pool[r];
+            } while (pool.length > 1 && currentTrack && nextTrack.id === currentTrack.id);
+
+            loadTrack(nextTrack);
+        }
+
+        function loadTrack(track) {
+            // Update History logic
+            if (currentTrack) {
+                addToHistory(currentTrack);
+            }
+            currentTrack = track;
+
+            // Update Player (Re-inject iframe to ensure clean load)
+            playerContainer.innerHTML = `
+                <iframe width="100%" height="100%" 
+                    src="https://www.youtube.com/embed/${track.id}?autoplay=1&controls=0&rel=0&modestbranding=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen 
+                    style="pointer-events: none;">
+                </iframe>
+            `;
+
+            // Update Metadata (with "typewriter" effect simulation by just replacing text)
+            metaTitle.innerText = track.title;
+            metaArtist.innerText = track.artist;
+            metaAlbum.innerText = track.album;
+            metaYear.innerText = track.year;
+            metaBpm.innerText = track.bpm;
+            metaKey.innerText = track.key;
+            metaGenre.innerText = `${track.genre} / ${track.style}`;
+            metaCountry.innerText = track.country;
+            metaId.innerText = Math.floor(Math.random() * 999).toString().padStart(3, '0');
+
+            // Reset Favorite Icon
             updateFavIcon();
         }
 
-        function loadVideo(id) {
-            // Reload iframe with new ID
-            const src = `https://www.youtube.com/embed/${id}?enablejsapi=1&autoplay=${isPlaying ? 1 : 0}&controls=0&modestbranding=1&rel=0`;
-            iframe.src = src;
-        }
-
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            updatePlayState();
-        }
-
-        function updatePlayState() {
-            // UI Icons
-            if (isPlaying) {
-                iconPlay.classList.add('hidden');
-                iconPause.classList.remove('hidden');
-                vinylArt.classList.add('vinyl-spin');
-                vinylArt.classList.remove('paused-vinyl');
-                vinylArt.style.transform = 'scale(1)';
-                
-                // YouTube Command
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            } else {
-                iconPlay.classList.remove('hidden');
-                iconPause.classList.add('hidden');
-                vinylArt.classList.add('paused-vinyl');
-                vinylArt.style.transform = 'scale(0.95)';
-                
-                // YouTube Command
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            }
-        }
-
-        function toggleVideoMode(show) {
-            showVideo = show;
+        function addToHistory(track) {
+            const li = document.createElement('li');
+            li.className = "p-2 border border-[#333] hover:bg-[#222] cursor-pointer flex gap-2 items-center group transition-colors";
+            li.onclick = () => loadTrack(track);
+            li.innerHTML = `
+                <div class="w-2 h-2 bg-[#444] rounded-full group-hover:bg-[#a65e2e]"></div>
+                <div class="truncate">
+                    <span class="font-bold text-[#888]">${track.title}</span>
+                    <span class="text-[#555] text-[10px] block">${track.artist}</span>
+                </div>
+            `;
             
-            if (showVideo) {
-                // Show Video
-                videoContainer.classList.remove('w-0', 'h-0', 'opacity-0', 'pointer-events-none');
-                videoContainer.classList.add('w-[80vw]', 'md:w-[600px]', 'h-[45vw]', 'md:h-[340px]', 'opacity-100', 'pointer-events-auto');
-                
-                // Dim Vinyl
-                vinylContainer.classList.add('opacity-20', 'scale-75', 'blur-sm');
-                vinylContainer.classList.remove('opacity-100', 'scale-100', 'blur-0');
-
-                // Buttons UI
-                modeVideoBtn.classList.replace('bg-zinc-800', 'bg-white');
-                modeVideoBtn.classList.replace('text-zinc-500', 'text-black');
-                modeVideoBtn.classList.add('shadow-lg', 'shadow-white/10');
-                
-                modeVinylBtn.classList.replace('bg-white', 'bg-zinc-800');
-                modeVinylBtn.classList.replace('text-black', 'text-zinc-500');
-                modeVinylBtn.classList.remove('shadow-lg', 'shadow-white/10');
-
-            } else {
-                // Hide Video
-                videoContainer.classList.add('w-0', 'h-0', 'opacity-0', 'pointer-events-none');
-                videoContainer.classList.remove('w-[80vw]', 'md:w-[600px]', 'h-[45vw]', 'md:h-[340px]', 'opacity-100', 'pointer-events-auto');
-
-                // Show Vinyl
-                vinylContainer.classList.remove('opacity-20', 'scale-75', 'blur-sm');
-                vinylContainer.classList.add('opacity-100', 'scale-100', 'blur-0');
-
-                // Buttons UI
-                modeVinylBtn.classList.replace('bg-zinc-800', 'bg-white');
-                modeVinylBtn.classList.replace('text-zinc-500', 'text-black');
-                modeVinylBtn.classList.add('shadow-lg', 'shadow-white/10');
-                
-                modeVideoBtn.classList.replace('bg-white', 'bg-zinc-800');
-                modeVideoBtn.classList.replace('text-black', 'text-zinc-500');
-                modeVideoBtn.classList.remove('shadow-lg', 'shadow-white/10');
-            }
-        }
-
-        function playNext() {
-            isPlaying = false;
-            updatePlayState();
-
-            // Get Filters
-            const yStart = parseInt(yearStart.value);
-            const yEnd = parseInt(yearEnd.value);
-            const genre = genreSelect.value;
-
-            // Filter
-            const filtered = TRACK_DATABASE.filter(t => 
-                t.year >= yStart && t.year <= yEnd &&
-                (genre === 'Todos' || t.genre.includes(genre))
-            );
-
-            const pool = filtered.length > 0 ? filtered : TRACK_DATABASE;
-            
-            let nextTrack;
-            // Simple random avoiding current if possible
-            if (pool.length > 1) {
-                do {
-                    nextTrack = pool[Math.floor(Math.random() * pool.length)];
-                } while(nextTrack.id === currentTrack.id);
-            } else {
-                nextTrack = pool[0];
+            // Remove "Empty" placeholder if exists
+            if (historyList.children[0]?.innerText.includes("Empty")) {
+                historyList.innerHTML = '';
             }
 
-            currentTrack = nextTrack;
-            renderTrack();
-            
-            // Auto play after short delay
-            setTimeout(() => {
-                isPlaying = true;
-                updatePlayState();
-            }, 800);
+            historyList.prepend(li);
+            if (historyList.children.length > 20) historyList.lastChild.remove();
+        }
+
+        function toggleFavorite() {
+            if (!currentTrack) return;
+            const idx = favorites.findIndex(f => f.id === currentTrack.id);
+            if (idx === -1) {
+                favorites.push(currentTrack);
+            } else {
+                favorites.splice(idx, 1);
+            }
+            updateFavIcon();
         }
 
         function updateFavIcon() {
-            if (isFavorite) {
-                favBtn.classList.replace('text-zinc-500', 'text-red-500');
-                // Could fill icon here but lucide uses stroke primarily
-                favBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+            const icon = document.getElementById('favIcon');
+            const isFav = favorites.find(f => f.id === currentTrack?.id);
+            if (isFav) {
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-red-600');
             } else {
-                favBtn.classList.replace('text-red-500', 'text-zinc-500');
-                favBtn.querySelector('svg').setAttribute('fill', 'none');
+                icon.classList.add('text-gray-400');
+                icon.classList.remove('text-red-600');
             }
         }
 
-        // --- EVENT LISTENERS ---
+        function togglePlay() {
+            // Can't really toggle play on iframe easily without API, 
+            // but we can simulate by reloading or showing paused overlay.
+            // For this demo, we'll just re-shuffle as a "Play Next" interaction.
+            shuffleTrack();
+        }
 
-        playBtn.addEventListener('click', togglePlay);
-        
-        shuffleBtn.addEventListener('click', playNext);
-
-        favBtn.addEventListener('click', () => {
-            isFavorite = !isFavorite;
-            updateFavIcon();
-        });
-
-        volumeSlider.addEventListener('input', (e) => {
-            volume = e.target.value;
-            iframe.contentWindow.postMessage(`{"event":"command","func":"setVolume","args":[${volume}]}`, '*');
-        });
-
-        modeVinylBtn.addEventListener('click', () => toggleVideoMode(false));
-        modeVideoBtn.addEventListener('click', () => toggleVideoMode(true));
-
-        // Filters Logic
-        filtersBtn.addEventListener('click', () => {
-            filtersOpen = true;
-            filtersBtn.classList.replace('bg-zinc-800/80', 'bg-indigo-600');
-            filtersBtn.classList.add('text-white');
-            filterPanel.classList.remove('translate-y-full');
-        });
-
-        closeFiltersBtn.addEventListener('click', () => {
-            filtersOpen = false;
-            filtersBtn.classList.replace('bg-indigo-600', 'bg-zinc-800/80');
-            filtersBtn.classList.remove('text-white');
-            filterPanel.classList.add('translate-y-full');
-        });
-        
-        applyFiltersBtn.addEventListener('click', () => {
-             filtersOpen = false;
-             filterPanel.classList.add('translate-y-full');
-             playNext();
-        });
-
-        // Range Sliders
-        const updateYearLabel = () => {
-            yearLabel.innerText = `${yearStart.value} - ${yearEnd.value}`;
-        };
-        yearStart.addEventListener('input', updateYearLabel);
-        yearEnd.addEventListener('input', updateYearLabel);
-
-        // --- INIT ---
-        renderTrack();
-        lucide.createIcons();
+        // Boot
+        window.onload = init;
 
     </script>
 </body>
